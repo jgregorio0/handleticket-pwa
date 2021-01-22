@@ -17,7 +17,8 @@
 </template>
 
 <script>
-import { result } from '~/static/js/test/annotations.js'
+// import { result } from '~/static/js/test/annotations.js'
+import axios from 'axios'
 
 export default {
   data() {
@@ -47,27 +48,25 @@ export default {
   },
   methods: {
     onSubmit(postData) {
+      this.$store.dispatch('grid/reset')
       if (this.file) {
         this.$store.dispatch('ticket/set', this.file)
         const formData = new FormData()
         formData.append('file', this.file)
-        // TODO yErrorMax as parameter and loading
-        /* axios
-          .post('ImagResultTableeTicket/api/tickets', formData, {
+        // TODO show loading
+        axios
+          .post('/api/tickets', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           })
           .then((result) => {
-            console.log(result)
             this.processSuccess(result)
           }) // TODO go on add result to vuex and show grid
           .catch((e) => {
-            console.error(e)
             this.processError(e)
           }) // TODO onError show message
-          */
-        this.processSuccess(result)
+        // this.processSuccess(result)
       }
     },
     processSuccess(result) {
