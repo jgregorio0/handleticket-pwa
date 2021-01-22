@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="alerts-container">
     <b-alert
       v-for="(alert, index) in alerts"
       :key="index"
@@ -20,3 +20,12 @@ export default {
   },
 }
 </script>
+
+<style>
+.alerts-container {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+</style>
