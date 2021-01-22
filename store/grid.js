@@ -1,124 +1,238 @@
-import Vue from 'vue'
 import GridParser from '~/modules/grid/GridParser'
-import { Cell } from '~/modules/grid/Cell'
+import {
+  addNewCell,
+  deleteRow,
+  deleteAllSelectedCells,
+  unselectAllSelectedCells,
+  selectCell,
+  unselectCell,
+  editingAllSelectedCell,
+  editCell,
+  copyAllSelectedCells,
+  moveRightBlock,
+  updateGridIndex,
+  shiftRightRow,
+  shiftLeftRow,
+  moveLeftBlock,
+  shiftUpColumn,
+  shiftDownColumn,
+  moveUp,
+  moveDown,
+  moveRight,
+  moveLeft,
+  joinCells,
+} from '~/modules/grid/Action'
 
-export const state = () => ({
-  annotations: [],
-  grid: [],
-  yErrorMax: 60,
-  selectedCells: {},
-})
+const getDefaultState = () => {
+  return {
+    annotations: [],
+    grid: [],
+    yErrorMax: 40,
+    selectedCells: {},
+    copiedValue: '',
+    isMultiSelection: false,
+  }
+}
+
+export const state = getDefaultState()
 
 export const mutations = {
+  reset(state) {
+    Object.assign(state, getDefaultState())
+  },
   setYErrorMax(state, yErrorMax) {
     state.yErrorMax = yErrorMax
   },
   setAnnotations(state, annotations) {
     state.annotations = annotations
   },
-  updateGrid(state) {
+  resetGrid(state) {
     const grid = []
     // parse annotations to grid
     const gridParser = new GridParser(state.yErrorMax)
     gridParser.parse(state.annotations)
     // format grid nxn
-    gridParser.rows.forEach((row) => {
+    gridParser.rows.forEach((row, iRow) => {
       const cells = []
       row.cells.forEach((normalizedText, iCol) => {
-        const cell = new Cell(normalizedText.text)
-        cells.push(cell)
+        addNewCell(cells, iRow, iCol, normalizedText.text)
       })
-      for (let index = cells.length; index < gridParser.maxColLength; index++) {
-        const cell = new Cell('')
-        cells.push(cell)
+      for (let iCol = cells.length; iCol < gridParser.maxColLength; iCol++) {
+        addNewCell(cells, iRow, iCol, '')
       }
       grid.push(cells)
     })
     state.grid = grid
   },
-  deleteRow(state, index) {
-    state.grid.splice(index, 1)
+  deleteRow(state, iRow) {
+    deleteRow(state.grid, iRow)
   },
-  unselectAllCells(state) {
-    state.grid.forEach((row) => {
-      row.forEach((cell) => {
-        cell.isSelected = false
-      })
-    })
-    state.selectedCells = {}
+  unselectCells(state) {
+    unselectAllSelectedCells(state)
   },
   selectCell(state, params) {
-    const cell = state.grid[params.row][params.col]
-    const key = '' + params.row + '-' + params.col
+    const cell = params.cell
+    const isMultiSelection = params.isMultiSelection
+    if (!isMultiSelection) {
+      unselectAllSelectedCells(state)
+    }
     if (cell.isSelected) {
-      cell.isSelected = false
-      Vue.delete(state.selectedCells, key)
+      unselectCell(state.selectedCells, cell)
     } else {
-      cell.isSelected = true
-      state.selectedCells = { ...state.selectedCells, [key]: null }
+      selectCell(state, cell)
     }
   },
-  isSelectedCell(state, params) {
-    const cell = state.grid[params.row][params.col]
-    return cell.isSelected()
-  },
   deleteSelectedCells(state) {
-    const selectedCellsKeys = Object.keys(state.selectedCells)
-    selectedCellsKeys.forEach((key) => {
-      const keySplit = key.split('-')
-      if (keySplit.length === 2) {
-        const iRow = keySplit[0]
-        const iCol = keySplit[1]
-        const cell = state.grid[iRow][iCol]
-        cell.text = ''
-        cell.isSelected = false
-      }
-      Vue.delete(state.selectedCells, key)
-    })
+    deleteAllSelectedCells(state)
   },
-  editingSelectedCells(state) {
-    const selectedCellsKeys = Object.keys(state.selectedCells)
-    selectedCellsKeys.forEach((key) => {
-      const keySplit = key.split('-')
-      if (keySplit.length === 2) {
-        const iRow = keySplit[0]
-        const iCol = keySplit[1]
-        const cell = state.grid[iRow][iCol]
-        cell.isEditing = true
-        cell.isSelected = false
-      }
-    })
+  editingSelectedCell(state) {
+    editingAllSelectedCell(state.selectedCells)
   },
   editCell(state, params) {
-    params.cell.text = params.value
-    params.cell.isEditing = false
-    params.cell.isSelected = false
+    editCell(state.selectedCells, params.cell, params.value)
+  },
+  copySelectedCellValues(state) {
+    copyAllSelectedCells(state.selectedCells)
+  },
+  shiftRightRow(state) {
+    updateGridIndex(state.grid)
+    const cells = Object.values(state.selectedCells)
+    cells.forEach((cell) => {
+      const row = state.grid[cell.iRow]
+      shiftRightRow(row)
+    })
+  },
+  shiftLeftRow(state) {
+    updateGridIndex(state.grid)
+    const cells = Object.values(state.selectedCells)
+    cells.forEach((cell) => {
+      const row = state.grid[cell.iRow]
+      shiftLeftRow(row)
+    })
+  },
+  moveRightBlock(state) {
+    updateGridIndex(state.grid)
+    const cell = Object.values(state.selectedCells)[0]
+    if (cell) {
+      moveRightBlock(state.grid, cell)
+    }
+  },
+  moveLeftBlock(state) {
+    updateGridIndex(state.grid)
+    const cell = Object.values(state.selectedCells)[0]
+    if (cell) {
+      moveLeftBlock(state.grid, cell)
+    }
+  },
+  joinSelectedCells(state) {
+    joinCells(state)
+  },
+  shiftUpColumn(state) {
+    updateGridIndex(state.grid)
+    // get selected cells
+    const cells = Object.values(state.selectedCells)
+    if (cells.length) {
+      const selectedCellColumn = cells[0].iCol
+      shiftUpColumn(state, selectedCellColumn)
+    }
+  },
+  shiftDownColumn(state) {
+    updateGridIndex(state.grid)
+    // get selected cell
+    const cells = Object.values(state.selectedCells)
+    if (cells.length) {
+      const selectedCellColumn = cells[0].iCol
+      shiftDownColumn(state, selectedCellColumn)
+    }
+  },
+  setMultiSelection(state) {
+    state.isMultiSelection = !state.isMultiSelection
+    if (!state.isMultiSelection) {
+      unselectAllSelectedCells(state)
+    }
+  },
+  moveUpCell(state) {
+    moveUp(state)
+  },
+  moveDownCell(state) {
+    moveDown(state)
+  },
+  moveRightCell(state) {
+    moveRight(state)
+  },
+  moveLeftCell(state) {
+    moveLeft(state)
   },
 }
 
 export const actions = {
+  reset(context) {
+    context.commit('reset')
+  },
   setYErrorMax(context, yErrorMax) {
     context.commit('setYErrorMax', yErrorMax)
-    context.commit('updateGrid')
+    context.commit('resetGrid')
   },
   setAnnotations(context, annotations) {
     context.commit('setAnnotations', annotations)
-    context.commit('updateGrid')
+    context.commit('resetGrid')
   },
   deleteRow(context, index) {
     context.commit('deleteRow', index)
-    context.commit('unselectAllCells')
+    context.commit('unselectCells')
   },
   selectCell(context, params) {
     context.commit('selectCell', params)
   },
+  unselectCells(context) {
+    context.commit('unselectCells')
+  },
   deleteSelectedCells(context) {
     context.commit('deleteSelectedCells')
   },
-  editingSelectedCells(context) {
-    context.commit('editingSelectedCells')
+  editingSelectedCell(context) {
+    context.commit('editingSelectedCell')
   },
   editCell(context, params) {
     context.commit('editCell', params)
+  },
+  copySelectedCellValues(context) {
+    context.commit('copySelectedCellValues')
+  },
+  shiftRightRow(context) {
+    context.commit('shiftRightRow')
+  },
+  moveRightBlock(context) {
+    context.commit('moveRightBlock')
+  },
+  shiftLeftRow(context) {
+    context.commit('shiftLeftRow')
+  },
+  moveLeftBlock(context) {
+    context.commit('moveLeftBlock')
+  },
+  joinSelectedCells(context) {
+    context.commit('joinSelectedCells')
+  },
+  shiftUpColumn(context) {
+    context.commit('shiftUpColumn')
+  },
+  shiftDownColumn(context) {
+    context.commit('shiftDownColumn')
+  },
+  setMultiSelection(context) {
+    context.commit('setMultiSelection')
+  },
+  moveUpCell(context) {
+    context.commit('moveUpCell')
+  },
+  moveDownCell(context) {
+    context.commit('moveDownCell')
+  },
+  moveRightCell(context) {
+    context.commit('moveRightCell')
+  },
+  moveLeftCell(context) {
+    context.commit('moveLeftCell')
   },
 }

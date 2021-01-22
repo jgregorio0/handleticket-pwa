@@ -19,4 +19,32 @@ export const actions = {
   reset(context) {
     context.removeByIndex('reset')
   },
+  dangerMd(context, text) {
+    context.commit('create', {
+      text: text.text,
+      variant: 'danger',
+      time: 5,
+    })
+  },
+  dangerSm(context, text) {
+    context.commit('create', {
+      text: text.text,
+      variant: 'danger',
+      time: 2,
+    })
+  },
+  infoSm(context, text) {
+    context.commit('create', {
+      text: text.text,
+      variant: 'info',
+      time: 2,
+    })
+  },
+  infoMd(context, text) {
+    context.commit('create', {
+      text: text.text,
+      variant: 'info',
+      time: 5,
+    })
+  },
 }

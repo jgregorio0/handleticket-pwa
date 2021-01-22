@@ -4,10 +4,14 @@
       <b-form-group id="input-group-max-y">
         <b-form-input
           :value="yErrorMax"
-          type="number"
+          type="range"
           placeholder="Maximum height difference to keep in the same row"
+          min="30"
+          max="100"
+          step="5"
           @input="setYErrorMax"
-        ></b-form-input>
+        ></b-form-input
+        >{{ yErrorMax }}
       </b-form-group>
     </b-form>
     <table
@@ -16,10 +20,10 @@
       aria-colcount="7"
       class="table b-table table-bordered"
     >
-      <!-- HEAD -->
+      <!-- HEAD
       <thead role="rowgroup" class>
         <tr role="row" class>
-          <!-- HEAD CELLS -->
+
           <th
             v-for="(cell, iCol) in grid[0]"
             :key="iCol"
@@ -36,23 +40,25 @@
             </div>
           </th>
         </tr>
-      </thead>
+      </thead>-->
       <!-- BODY -->
       <tbody role="rowgroup">
         <tr v-for="(cells, iRow) in grid" :key="iRow" role="row">
           <!-- BODY CELLS -->
           <td
             v-for="(cell, iCol) in cells"
+            :id="cell.id()"
             :key="iCol"
             :aria-colindex="iCol"
             role="cell"
             :class="{ 'selected-cell': cell.isSelected }"
-            @click="selectCell(iRow, iCol, cell)"
+            @click="selectCell(cell, $event)"
           >
             <!-- ROW CONTENT -->
             <div class="text-cell-container">
               <b-form-input
                 v-show="cell.isEditing"
+                :id="cell.id() + '-input'"
                 class="text-cell-input"
                 type="text"
                 size="sm"
@@ -98,9 +104,11 @@ export default {
     setYErrorMax: debounce(function (yErrorMax) {
       this.$store.dispatch('grid/setYErrorMax', yErrorMax)
     }, 500),
-    selectCell(row, col, cell) {
+    selectCell(cell, $event) {
       this.controlSideToolbar(cell)
-      this.$store.dispatch('grid/selectCell', { row, col })
+      const isMultiSelection =
+        this.$store.state.grid.isMultiSelection || $event.ctrlKey
+      this.$store.dispatch('grid/selectCell', { cell, isMultiSelection })
     },
     controlSideToolbar(cell) {
       if (cell.isSelected) {
@@ -115,7 +123,6 @@ export default {
       }
     },
     editCell: debounce(function (cell, $event) {
-      console.log('editCell', cell, $event.target.value)
       this.$store.dispatch('grid/editCell', {
         cell,
         value: $event.target.value,
@@ -130,10 +137,10 @@ export default {
   overflow-x: scroll;
 }
 .text-cell-container {
-  height: 24px;
+  min-height: 24px;
 }
 .text-cell-input {
-  height: 24px;
+  min-height: 24px;
 }
 .rm-row-container {
   position: relative;
