@@ -24,5 +24,6 @@ export default {
     Footer,
     Loading,
   },
+  middleware: ['auth'],
 }
 </script>
