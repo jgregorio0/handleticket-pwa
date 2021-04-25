@@ -1,15 +1,9 @@
-export const state = () => ({
-  ticket: null,
-})
-
-export const mutations = {
-  set(state, ticketPath) {
-    state.ticket = ticketPath
-  },
-}
-
 export const actions = {
-  set(context, ticketPath) {
-    context.commit('set', ticketPath)
+  send(context, formData) {
+    return this.$axios.post('/api/tickets', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
   },
 }

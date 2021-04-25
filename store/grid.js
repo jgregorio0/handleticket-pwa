@@ -23,18 +23,16 @@ import {
   joinCells,
 } from '~/modules/grid/Action'
 
-const getDefaultState = () => {
-  return {
-    annotations: [],
-    grid: [],
-    yErrorMax: 40,
-    selectedCells: {},
-    copiedValue: '',
-    isMultiSelection: false,
-  }
-}
+export const getDefaultState = () => ({
+  annotations: [],
+  grid: [],
+  yErrorMax: 40,
+  selectedCells: {},
+  copiedValue: '',
+  isMultiSelection: false,
+})
 
-export const state = getDefaultState()
+export const state = () => getDefaultState()
 
 export const mutations = {
   reset(state) {

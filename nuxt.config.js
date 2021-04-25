@@ -14,8 +14,8 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
-
+  plugins: ['~/plugins/axios.js'],
+      
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
 
@@ -47,12 +47,15 @@ export default {
   },
 
   proxy: {
-    '/api/': 'http://localhost:8080',
-    '/test/': 'http://localhost:3000',
+    //'/api/': 'http://localhost:8080',
+    '/api/': 'http://localhost:3001',
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
     // vendor: ['lodash']
   },
+  router: {
+    middleware: ['auth']
+  }
 }

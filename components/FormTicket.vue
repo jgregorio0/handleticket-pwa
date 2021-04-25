@@ -17,9 +17,6 @@
 </template>
 
 <script>
-// import { result } from '~/static/js/test/annotations.js'
-import axios from 'axios'
-
 export default {
   data() {
     return {
@@ -47,45 +44,42 @@ export default {
     },
   },
   methods: {
-    onSubmit(postData) {
+    onSubmit() {
       this.$store.dispatch('grid/reset')
       if (this.file) {
-        this.$store.dispatch('ticket/set', this.file)
+        // if file selected
         const formData = new FormData()
         formData.append('file', this.file)
         // TODO show loading
-        axios
-          .post('/api/tickets', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
+        // send file to api for parsing
+        this.$store
+          .dispatch('ticket/send', formData)
           .then((result) => {
-            this.processSuccess(result)
-          }) // TODO go on add result to vuex and show grid
-          .catch((e) => {
-            this.processError(e)
-          }) // TODO onError show message
-        // this.processSuccess(result)
+            // TODO get annotations from store
+            if (result && result.data && result.data.length > 0) {
+              // if file is parsed
+              this.$store.dispatch('grid/setAnnotations', result.data)
+              this.$store.dispatch('alerts/infoSm', {
+                text: 'Ticket parsed!', // TODO add i18n
+              })
+            } else {
+              // if file has been sent but annotations are empty
+              this.$store.dispatch('alerts/dangerLg', {
+                text: 'File is empty',
+              })
+            }
+          })
+          .catch(() => {
+            // sending file has failed
+            this.$store.dispatch('alerts/dangerLg', {
+              text: 'Error sending file',
+            })
+          })
       }
     },
-    processSuccess(result) {
-      if (result && result.data && result.data.length > 0) {
-        this.$store.dispatch('grid/setAnnotations', result.data)
-        this.$store.dispatch('alerts/create', {
-          text: 'Ticket parsed!', // TODO add i18n
-          variant: 'success',
-          time: 5, // TODO add to config
-        })
-      }
-    },
-    processError(e) {
-      this.$store.dispatch('alerts/create', {
-        text: 'Error sending file', // TODO add i18n
-        variant: 'danger',
-        time: true,
-      })
-    },
+  },
+  created() {
+    this.$store.dispatch('auth/init')
   },
 }
 </script>

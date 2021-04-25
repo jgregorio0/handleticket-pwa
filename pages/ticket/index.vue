@@ -4,7 +4,7 @@
       <!-- Form -->
       <FormTicket />
     </section>
-    <section v-show="this.$store.state.ticket.ticket">
+    <section v-show="this.$store.state.grid.annotations.length">
       <!-- Grid ticket parsed -->
       <Grid />
     </section>
