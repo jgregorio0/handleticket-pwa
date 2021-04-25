@@ -1,5 +1,14 @@
 <template>
   <div class="container">
+    <div v-show="error">
+      <b-icon icon="exclamation-triangle" aria-hidden="true"></b-icon>
+      <span>Ha ocurrido un error</span>
+      <ul>
+        <li>Revisa que tu contrasena es correcta</li>
+        <li>Si no estas registrado hazlo aqui</li>
+        <li>Si no recuerdas tu contrasena pulsa aqui</li>
+      </ul>
+    </div>
     <b-form @submit.prevent="onSubmit">
       <b-form-group id="input-group-1" label="Email:" label-for="input-1">
         <b-form-input
@@ -30,7 +39,7 @@ export default {
     return {
       email: '',
       pass: '',
-      status: '',
+      error: false,
     }
   },
   methods: {
@@ -40,12 +49,16 @@ export default {
         .dispatch('auth/login', {
           email: this.email,
           pass: this.pass,
+          error: false,
         })
         .then(() => {
           this.$router.push({ name: 'ticket' })
         })
-        .catch((err) => {
-          this.status = err.response.status
+        .catch(() => {
+          this.error = true
+          this.$store.dispatch('alerts/dangerLg', {
+            text: 'No se ha podido identificar tu usuario',
+          })
         })
     },
   },
