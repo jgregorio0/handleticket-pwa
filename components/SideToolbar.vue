@@ -8,10 +8,6 @@
       sidebar-class="side-toolbar"
     >
       <div>
-        <b-button variant="none" @click="setMultiSelection">
-          <b-icon-grid-fill v-show="isMultiSelection"></b-icon-grid-fill>
-          <b-icon-square-fill v-show="!isMultiSelection"></b-icon-square-fill>
-        </b-button>
         <b-button variant="outline-danger" @click="unselectAnySelectedCell">
           <b-icon-x-square></b-icon-x-square>
         </b-button>
@@ -27,61 +23,17 @@
         <b-button variant="outline-secondary" @click="joinSelectedCells">
           <b-icon-arrows-angle-contract></b-icon-arrows-angle-contract>
         </b-button>
-        <b-button
-          v-show="!isMultiSelection"
-          variant="outline-primary"
-          @click="shiftUpColumn"
-        >
+        <b-button variant="outline-primary" @click="moveUpCell">
           <b-icon-arrow-up></b-icon-arrow-up>
         </b-button>
-        <b-button
-          v-show="isMultiSelection"
-          variant="outline-primary"
-          @click="moveUpCell"
-        >
-          <b-icon-arrow-bar-up></b-icon-arrow-bar-up>
-        </b-button>
-        <b-button
-          v-show="!isMultiSelection"
-          variant="outline-secondary"
-          @click="shiftRightRow"
-        >
+        <b-button variant="outline-secondary" @click="moveRightCell">
           <b-icon-arrow-right></b-icon-arrow-right>
         </b-button>
-        <b-button
-          v-show="isMultiSelection"
-          variant="outline-secondary"
-          @click="moveRightCell"
-        >
-          <b-icon-arrow-bar-right></b-icon-arrow-bar-right>
-        </b-button>
-        <b-button
-          v-show="!isMultiSelection"
-          variant="outline-primary"
-          @click="shiftDownColumn"
-        >
+        <b-button variant="outline-primary" @click="moveDownCell">
           <b-icon-arrow-down></b-icon-arrow-down>
         </b-button>
-        <b-button
-          v-show="isMultiSelection"
-          variant="outline-primary"
-          @click="moveDownCell"
-        >
-          <b-icon-arrow-bar-down></b-icon-arrow-bar-down>
-        </b-button>
-        <b-button
-          v-show="!isMultiSelection"
-          variant="outline-secondary"
-          @click="shiftLeftRow"
-        >
+        <b-button variant="outline-secondary" @click="moveLeftCell">
           <b-icon-arrow-left></b-icon-arrow-left>
-        </b-button>
-        <b-button
-          v-show="isMultiSelection"
-          variant="outline-secondary"
-          @click="moveLeftCell"
-        >
-          <b-icon-arrow-bar-left></b-icon-arrow-bar-left>
         </b-button>
         <b-button variant="outline-secondary" @click="moveRightBlock">
           <b-icon-arrow-return-right></b-icon-arrow-return-right>
@@ -117,9 +69,6 @@ export default {
     },
     isSideToolbarOpen() {
       return this.$store.state.sidebar.isSideToolbarOpen
-    },
-    isMultiSelection() {
-      return this.$store.state.grid.isMultiSelection
     },
   },
   methods: {
@@ -178,9 +127,6 @@ export default {
       if (this.validateMultipleCellsSelected()) {
         this.$store.dispatch('grid/joinSelectedCells')
       }
-    },
-    setMultiSelection() {
-      this.$store.dispatch('grid/setMultiSelection')
     },
     moveUpCell() {
       if (this.validateAnyCellSelected()) {
