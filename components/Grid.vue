@@ -2,6 +2,10 @@
   <div class="container scroll-x">
     <b-form>
       <b-form-group id="input-group-max-y">
+        <span small
+          >Move to the right so that more cells enter the same row and vice
+          versa</span
+        >
         <b-form-input
           :value="yErrorMax"
           type="range"
