@@ -316,3 +316,19 @@ export function joinCells(state) {
   }
   unselectAllSelectedCells(state)
 }
+
+export function copyCellsText(grid) {
+  let text = ''
+  grid.forEach((row, iRow) => {
+    if (iRow !== 0) {
+      text += '\n'
+    }
+    row.forEach((cell, iCell) => {
+      if (iCell > 0) {
+        text += '\t'
+      }
+      text += cell.text
+    })
+  })
+  return text
+}
