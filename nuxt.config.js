@@ -46,9 +46,9 @@ export default {
     proxy: true // Can be also an object with default options
   },
 
-  proxy: {
-    '/api/': process.env.BASE_URL || 'http://localhost:8080/v1/',
-  },
+  proxy: [
+    ['/api', { target: process.env.BASE_URL || 'http://localhost:8080', pathRewrite: { '^/api': '/api/v1' } }]
+  ],
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
