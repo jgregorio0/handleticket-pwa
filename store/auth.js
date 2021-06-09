@@ -10,6 +10,7 @@ export const state = () => ({
 
 export const mutations = {
   SET_TOKEN(state, token) {
+    console.log('SET_TOKEN', token)
     Cookie.set(TOKEN, token)
     state.token = token
     if (process.client) {
@@ -60,12 +61,15 @@ export const mutations = {
 
 export const actions = {
   register({ commit }, credentials) {
-    return this.$axios.post('/api/register', credentials).then(({ data }) => {
+    return this.$axios.post('register', credentials).then(({ data }) => {
       commit('SET_TOKEN', data.token)
     })
   },
   login({ commit }, credentials) {
-    return this.$axios.post('/api/login', credentials).then(({ data }) => {
+    return this.$axios.post('login', credentials).then(({ data }) => {
+      if (!data.token) {
+        throw new Error('token not found')
+      }
       commit('SET_TOKEN', data.token)
       commit('SET_USER', data.email)
     })
