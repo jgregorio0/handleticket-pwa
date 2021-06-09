@@ -49,7 +49,6 @@ export default {
         .dispatch('auth/login', {
           email: this.email,
           pass: this.pass,
-          error: false,
         })
         .then(() => {
           this.$router.push({ name: 'ticket' })
