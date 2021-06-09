@@ -29,7 +29,7 @@ export const getDefaultState = () => ({
   yErrorMax: 40,
   selectedCells: {},
   copiedValue: '',
-  isMultiSelection: false,
+  isMultiSelection: true,
 })
 
 export const state = () => getDefaultState()

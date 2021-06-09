@@ -111,7 +111,7 @@ export default {
     selectCell(cell, $event) {
       this.controlSideToolbar(cell)
       const isMultiSelection =
-        this.$store.state.grid.isMultiSelection || $event.ctrlKey
+        this.$store.state.grid.isMultiSelection && !$event.ctrlKey
       this.$store.dispatch('grid/selectCell', { cell, isMultiSelection })
     },
     controlSideToolbar(cell) {
