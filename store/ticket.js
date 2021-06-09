@@ -11,7 +11,7 @@ export const mutations = {
 export const actions = {
   send({ commit }, formData) {
     commit('SET_TICKET', formData.get('file'))
-    return this.$axios.post('tickets', formData, {
+    return this.$axios.post('/api/tickets', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

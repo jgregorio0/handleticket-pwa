@@ -7,14 +7,14 @@ export default function ({ $axios, redirect, store }) {
   })
 
   $axios.onError((error) => {
-    console.log('onError', error)
+    console.error('onError', error)
     const code = parseInt(error.response && error.response.status)
     if (code === 400) {
       redirect('/400')
     } else if (code === 401) {
       // TODO show error not authorized
       // redirect('/')
-      console.log('not authorized')
+      console.error('not authorized')
     }
   })
 }

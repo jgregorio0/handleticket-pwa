@@ -31,3 +31,8 @@ heroku config:set HOST=0.0.0.0
 ```
 git push heroku master
 ```
+
+3. Set URL_BASE
+```
+heroku config:set BASE_URL="https://handleticket-api.herokuapp.com/v1/api"
+```

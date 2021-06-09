@@ -20,7 +20,6 @@
 </template>
 
 <script>
-// import axios from 'axios'
 import Grid from '~/components/Grid'
 import SideImage from '~/components/SideImage'
 import FormTicket from '~/components/FormTicket'
