@@ -68,9 +68,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('onSubmit')
       if (!this.isLoading && this.file) {
-        console.log('execute')
         this.isLoading = true
         this.$store.dispatch('grid/reset')
         // if file selected
