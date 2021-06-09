@@ -18,3 +18,16 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+# Deploy to Heroku
+1. Create server
+```
+heroku create handleticket-pwa
+heroku buildpacks:set heroku/nodejs
+heroku config:set HOST=0.0.0.0
+```
+
+2. Push changes
+```
+git push heroku master
+```
