@@ -8,9 +8,6 @@
       sidebar-class="side-toolbar"
     >
       <div>
-        <b-button variant="outline-danger" @click="unselectAnySelectedCell">
-          <b-icon-x-square></b-icon-x-square>
-        </b-button>
         <b-button variant="outline-danger" @click="deleteSelectedCells">
           <b-icon-trash></b-icon-trash>
         </b-button>
@@ -36,10 +33,13 @@
           <b-icon-arrow-left></b-icon-arrow-left>
         </b-button>
         <b-button variant="outline-secondary" @click="moveRightBlock">
-          <b-icon-arrow-return-right></b-icon-arrow-return-right>
+          <b-icon-arrow-bar-right></b-icon-arrow-bar-right>
         </b-button>
-        <b-button variant="outline-secondary" @click="moveLeftBlock">
+        <b-button variant="outline-secondary" @click="insertRow">
           <b-icon-arrow-return-left></b-icon-arrow-return-left>
+        </b-button>
+        <b-button variant="outline-success" @click="unselectAnySelectedCell">
+          <b-icon-check2></b-icon-check2>
         </b-button>
       </div>
     </b-sidebar>
@@ -78,6 +78,7 @@ export default {
     deleteSelectedCells() {
       if (this.validateAnyCellSelected()) {
         this.$store.dispatch('grid/deleteSelectedCells')
+        this.$store.dispatch('sidebar/setSideToolbar', false)
       }
     },
     editingSelectedCell() {
@@ -88,8 +89,9 @@ export default {
     copySelectedCellValues() {
       if (this.validateAnyCellSelected()) {
         this.$store.dispatch('grid/copySelectedCellValues')
-        this.$store.dispatch('alerts/dangerSm', {
-          text: 'Text copied!', // TODO add i18n
+        this.$store.dispatch('sidebar/setSideToolbar', false)
+        this.$store.dispatch('alerts/infoSm', {
+          text: 'Text copied!',
         })
       }
     },
@@ -126,6 +128,7 @@ export default {
     joinSelectedCells() {
       if (this.validateMultipleCellsSelected()) {
         this.$store.dispatch('grid/joinSelectedCells')
+        this.$store.dispatch('sidebar/setSideToolbar', false)
       }
     },
     moveUpCell() {
@@ -151,6 +154,13 @@ export default {
     unselectAnySelectedCell() {
       if (this.validateAnyCellSelected()) {
         this.$store.dispatch('grid/unselectCells')
+        this.$store.dispatch('sidebar/setSideToolbar', false)
+      }
+    },
+    insertRow() {
+      if (this.validateSingleCellSelected()) {
+        this.$store.dispatch('grid/insertRow')
+        this.$store.dispatch('sidebar/setSideToolbar', false)
       }
     },
     validateSingleCellSelected() {
