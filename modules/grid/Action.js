@@ -343,3 +343,12 @@ export function insertRow(iRow, grid) {
   }
   grid.splice(iRow, 0, row)
 }
+
+export function copyToAbove(cellSource, grid) {
+  const numRows = grid.length
+  for (let iRow = cellSource.iRow + 1; iRow < numRows; iRow++) {
+    const row = grid[iRow]
+    const cellTarget = row[cellSource.iCol]
+    cellTarget.text = cellSource.text
+  }
+}

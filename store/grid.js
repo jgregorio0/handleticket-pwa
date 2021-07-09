@@ -22,6 +22,7 @@ import {
   moveLeft,
   joinCells,
   insertRow,
+  copyToAbove,
 } from '~/modules/grid/Action'
 
 export const getDefaultState = () => ({
@@ -169,6 +170,13 @@ export const mutations = {
       insertRow(cell.iRow + 1, state.grid)
     }
   },
+  copyCellToAllAbove(state) {
+    updateGridIndex(state.grid)
+    const cellSource = Object.values(state.selectedCells)[0]
+    if (cellSource) {
+      copyToAbove(cellSource, state.grid)
+    }
+  },
 }
 
 export const actions = {
@@ -243,5 +251,8 @@ export const actions = {
   },
   insertRow(context) {
     context.commit('insertRow')
+  },
+  copyCellToAllAbove(context) {
+    context.commit('copyCellToAllAbove')
   },
 }

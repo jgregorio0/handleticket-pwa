@@ -38,6 +38,9 @@
         <b-button variant="outline-secondary" @click="insertRow">
           <b-icon-arrow-return-left></b-icon-arrow-return-left>
         </b-button>
+        <b-button variant="outline-secondary" @click="copyCellToAllAbove">
+          <b-icon-chevron-double-down></b-icon-chevron-double-down>
+        </b-button>
         <b-button variant="outline-success" @click="unselectAnySelectedCell">
           <b-icon-check2></b-icon-check2>
         </b-button>
@@ -160,6 +163,12 @@ export default {
     insertRow() {
       if (this.validateSingleCellSelected()) {
         this.$store.dispatch('grid/insertRow')
+        this.$store.dispatch('sidebar/setSideToolbar', false)
+      }
+    },
+    copyCellToAllAbove() {
+      if (this.validateSingleCellSelected()) {
+        this.$store.dispatch('grid/copyCellToAllAbove')
         this.$store.dispatch('sidebar/setSideToolbar', false)
       }
     },
