@@ -26,6 +26,20 @@ export function sortCellsByRowDescAndColumnAsc(a, b) {
   }
 }
 
+export function sortCellsByRowDescAndColumnDesc(a, b) {
+  if (a.iRow > b.iRow) {
+    return -1
+  } else if (a.iRow < b.iRow) {
+    return 1
+  } else if (a.iCol > b.iCol) {
+    return -1
+  } else if (a.iCol < b.iCol) {
+    return 1
+  } else {
+    return 0
+  }
+}
+
 export function sortCellsByColumnAsc(a, b) {
   if (a.iCol > b.iCol) {
     return 1

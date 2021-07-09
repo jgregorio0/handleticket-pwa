@@ -21,6 +21,7 @@ import {
   moveRight,
   moveLeft,
   joinCells,
+  insertRow,
 } from '~/modules/grid/Action'
 
 export const getDefaultState = () => ({
@@ -161,6 +162,13 @@ export const mutations = {
   moveLeftCell(state) {
     moveLeft(state)
   },
+  insertRow(state) {
+    updateGridIndex(state.grid)
+    const cell = Object.values(state.selectedCells)[0]
+    if (cell) {
+      insertRow(cell.iRow + 1, state.grid)
+    }
+  },
 }
 
 export const actions = {
@@ -232,5 +240,8 @@ export const actions = {
   },
   moveLeftCell(context) {
     context.commit('moveLeftCell')
+  },
+  insertRow(context) {
+    context.commit('insertRow')
   },
 }

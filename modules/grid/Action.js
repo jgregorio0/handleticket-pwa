@@ -4,6 +4,7 @@ import { copyToClipboard } from '~/modules/util/CopyToClipboardUtil'
 import {
   sortCellsByRowAscAndColumnAsc,
   sortCellsByRowDescAndColumnAsc,
+  sortCellsByRowDescAndColumnDesc,
   sortCellsByColumnAsc,
   sortCellsByColumnDesc,
 } from '~/modules/grid/SortCells'
@@ -11,6 +12,7 @@ import {
 export function deleteAllSelectedCells(state) {
   updateGridIndex(state.grid)
   const cells = Object.values(state.selectedCells)
+  cells.sort(sortCellsByRowDescAndColumnDesc)
   cells.forEach((cell) => {
     deleteCell(state.grid[cell.iRow], cell.iRow, cell.iCol)
   })
@@ -331,4 +333,13 @@ export function copyCellsText(grid) {
     })
   })
   return text
+}
+
+export function insertRow(iRow, grid) {
+  const row = []
+  const iColMax = grid[0].length
+  for (let iCol = 0; iCol < iColMax; iCol++) {
+    addNewCell(row, iRow, iCol)
+  }
+  grid.splice(iRow, 0, row)
 }
