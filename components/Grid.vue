@@ -10,7 +10,7 @@
           :value="yErrorMax"
           type="range"
           placeholder="Maximum height difference to keep in the same row"
-          min="30"
+          min="5"
           max="100"
           step="5"
           @input="setYErrorMax"
@@ -24,25 +24,15 @@
       aria-colcount="7"
       class="table b-table table-bordered"
     >
-      <!-- HEAD
+      <!-- HEAD 
       <thead role="rowgroup" class>
         <tr role="row" class>
-
-          <th
-            v-for="(cell, iCol) in grid[0]"
-            :key="iCol"
-            role="columnheader"
-            scope="col"
-            :aria-colindex="iCol"
-          >
-            <div>
-              <b-form-input
-                :value="iCol"
-                type="text"
-                placeholder="Set column name"
-              ></b-form-input>
-            </div>
-          </th>
+          <th>Store</th>
+          <th>Date</th>
+          <th>Quantity</th>
+          <th>Article</th>
+          <th>Price/Unit</th>
+          <th>Price</th>
         </tr>
       </thead>-->
       <!-- BODY -->
@@ -63,6 +53,7 @@
               <b-form-input
                 v-show="cell.isEditing"
                 :id="cell.id() + '-input'"
+                :value="cell.text"
                 class="text-cell-input"
                 type="text"
                 size="sm"
