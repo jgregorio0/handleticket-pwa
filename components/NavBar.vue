@@ -7,7 +7,7 @@
         <template #button-content>
           <em>{{ email }}</em>
         </template>
-        <b-dropdown-item @click="logout()" href="#">Logout</b-dropdown-item>
+        <b-dropdown-item href="#" @click="logout()">Logout</b-dropdown-item>
       </b-nav-item-dropdown>
     </b-navbar-nav>
 

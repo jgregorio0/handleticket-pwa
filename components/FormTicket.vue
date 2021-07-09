@@ -2,8 +2,8 @@
   <div class="container">
     <b-button
       v-show="showCopyToClipboard"
-      @click="copyToClipboard"
       variant="success"
+      @click="copyToClipboard"
       ><span>Copy to clipboard</span> <b-icon-files></b-icon-files
     ></b-button>
     <b-collapse v-model="showSendTicketForm">
@@ -23,9 +23,9 @@
     </b-collapse>
     <b-button
       block
-      @click="showSendTicketForm = !showSendTicketForm"
       variant="link"
       class="send-ticket-form collapse-btn"
+      @click="showSendTicketForm = !showSendTicketForm"
       ><b-icon-chevron-up v-show="showSendTicketForm"></b-icon-chevron-up
       ><b-icon-chevron-down v-show="!showSendTicketForm"></b-icon-chevron-down>
     </b-button>
@@ -65,6 +65,9 @@ export default {
     showCopyToClipboard() {
       return !this.showSendTicketForm && this.$store.state.grid.grid.length
     },
+  },
+  created() {
+    this.$store.dispatch('auth/init')
   },
   methods: {
     onSubmit() {
@@ -120,9 +123,6 @@ export default {
         })
       }
     },
-  },
-  created() {
-    this.$store.dispatch('auth/init')
   },
 }
 </script>
